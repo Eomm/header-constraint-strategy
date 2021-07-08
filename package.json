@@ -1,7 +1,7 @@
 {
   "name": "template-nodejs",
-  "version": "1.0.0",
-  "description": "<CHANGE ME>",
+  "version": "0.0.1",
+  "description": "a find-my-way header constraint",
   "main": "index.js",
   "scripts": {
     "lint": "standard",
@@ -13,7 +13,12 @@
     "type": "git",
     "url": "git+https://github.com/Eomm/<CHANGE ME>.git"
   },
-  "keywords": [],
+  "keywords": [
+    "fastify",
+    "constraint",
+    "find-my-way",
+    "plugin"
+  ],
   "author": "Manuel Spigolon <behemoth89@gmail.com> (https://github.com/Eomm)",
   "license": "MIT",
   "bugs": {
@@ -21,6 +26,8 @@
   },
   "homepage": "https://github.com/Eomm/<CHANGE ME>#readme",
   "devDependencies": {
+    "fastify": "^3.18.1",
+    "find-my-way": "^4.3.1",
     "standard": "^16.0.3",
     "tap": "^15.0.1"
   }

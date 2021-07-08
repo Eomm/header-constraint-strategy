@@ -1,30 +1,24 @@
-# template-nodejs
-Template per Node.js modules  
-Look for `CHANGE ME` string to spot where adjust this template.
+# header-constraint-strategy
 
----
+A general purpose [`find-my-way`](https://github.com/delvedor/find-my-way) custom constraint strategy.
+Tested for [Fastify](https://github.com/fastify/fastify).
 
-CHANGE ME: module description
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-```
-[![Build Status](https://github.com/Eomm/CHANGE ME/workflows/ci/badge.svg)](https://github.com/Eomm/CHANGE ME/actions)
-
-```
+[![Build Status](https://github.com/Eomm/header-constraint-strategy/workflows/ci/badge.svg)](https://github.com/Eomm/header-constraint-strategy/actions)
 
 
 ## Install
 
 ```
-npm install <CHANGE ME>
+npm install header-constraint-strategy
 ```
 
 
 ## Usage
 
 ```js
-// CHANGE ME: some code
+// header-constraint-strategy: some code
 ```
 
 
