@@ -1,5 +1,5 @@
 {
-  "name": "template-nodejs",
+  "name": "header-constraint-strategy",
   "version": "0.0.1",
   "description": "a find-my-way header constraint",
   "main": "index.js",
