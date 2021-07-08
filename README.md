@@ -1,11 +1,11 @@
 # header-constraint-strategy
 
-A general purpose [`find-my-way`](https://github.com/delvedor/find-my-way) custom constraint strategy.
-Tested for [Fastify](https://github.com/fastify/fastify).
-
-
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Build Status](https://github.com/Eomm/header-constraint-strategy/workflows/ci/badge.svg)](https://github.com/Eomm/header-constraint-strategy/actions)
+
+A general purpose [`find-my-way`](https://github.com/delvedor/find-my-way) custom [constraint strategy](https://www.fastify.io/docs/latest/Routes/#constraints).
+
+Tested for [Fastify](https://github.com/fastify/fastify) ✅!
 
 This module let you to drive the incoming HTTP request into a route based on the header's strict content.
 Doing so, if a request has a specific string header, it can reach a route hide behind a constraint.
@@ -21,7 +21,7 @@ npm install header-constraint-strategy
 
 ## Usage with Fastify
 
-Here all the constraint types you can define with this module!
+Here all the constraint types you can define with this module!  
 This setup shows you all the settings `header-constraint-strategy` provides to you.
 
 ```js
@@ -102,8 +102,8 @@ The routes can be reached via an HTTP request with these headers.
 6) The `appOption` constraint is matched
 7) Multiple constraint matches
 8) Only the `appOption` constraint is matched
-9) When there are multiple matches (the route with `foo` and route with `mustBeIn` and `appOption`), the route with more fulfilled constraint wins!
-10) In case of draws (the route with `foo` and the route with `appOption` are metching) wins the last route configured! So in this example, if you move the `foo` route ad the end of the file, the output will change!
+9) When there are multiple matches _(the route with `foo` and route with `mustBeIn` and `appOption`)_, the route with more fulfilled constraint wins!
+10) In case of draws _(the route with `foo` and the route with `appOption` are metching)_ wins the last route configured! So in this example, if you move the `foo` route ad the end of the file, the output will change!
 
 
 ## Options
