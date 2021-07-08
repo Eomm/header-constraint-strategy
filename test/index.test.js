@@ -7,8 +7,12 @@ const Fastify = require('fastify')
 const headerConstraintStrategy = require('../index')
 
 test('Bad interface', t => {
-  t.plan(1)
+  t.plan(2)
   t.throws(headerConstraintStrategy)
+
+  t.throws(() => {
+    headerConstraintStrategy({})
+  })
 })
 
 test('FindMyWay integration', t => {
@@ -45,6 +49,7 @@ test('FindMyWay integration', t => {
   router.lookup({ method: 'GET', url: '/', headers: { hello: 'C' } }, {})
 
   router.off('GET', '/')
+  router.reset()
   t.pass('completed')
 })
 
@@ -100,6 +105,94 @@ test('Fastify integration', async t => {
   res = await app.inject({ url: '/', headers: { foo: 'zxc' } })
   t.equal(res.statusCode, 200)
   t.equal(res.json().val, 'response 3')
+})
+
+test('README example', async t => {
+  // STEP 1: setup the constraints into your fastify instance
+  const app = Fastify({
+    constraints: {
+      // basic usage
+      foo: headerConstraintStrategy('foo'),
+      // strict usage
+      mustBeIn: headerConstraintStrategy({ header: 'mustBeIn', mustMatchWhenDerived: true }),
+      // custom header usage
+      appOption: headerConstraintStrategy({ name: 'appOption', header: 'x-my-app' })
+    }
+  })
+
+  // STEP 2: use the constraint where you need them
+  app.get('/', {
+    handler: reply('no constraint')
+  })
+
+  app.get('/', {
+    handler: reply('foo'),
+    constraints: {
+      foo: 'bar'
+    }
+  })
+
+  app.get('/', {
+    handler: reply('mustBeIn'),
+    constraints: {
+      mustBeIn: '123'
+    }
+  })
+
+  app.get('/', {
+    handler: reply('appOption'),
+    constraints: {
+      appOption: 'ABC'
+    }
+  })
+
+  app.get('/', {
+    handler: reply('mustBeIn and appOption'),
+    constraints: {
+      mustBeIn: '123',
+      appOption: 'ABC'
+    }
+  })
+
+  let res
+  res = await app.inject({ url: '/' })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'no constraint')
+
+  res = await app.inject({ url: '/', headers: { foo: 'bar' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'foo')
+
+  res = await app.inject({ url: '/', headers: { foo: 'hello' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'no constraint')
+
+  res = await app.inject({ url: '/', headers: { mustBeIn: '123' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'mustBeIn')
+
+  res = await app.inject({ url: '/', headers: { mustBeIn: '456' } })
+  t.equal(res.statusCode, 404)
+
+  res = await app.inject({ url: '/', headers: { 'x-my-app': 'ABC' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'appOption')
+
+  res = await app.inject({ url: '/', headers: { mustBeIn: '123', 'x-my-app': 'ABC' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'mustBeIn and appOption')
+
+  res = await app.inject({ url: '/', headers: { mustBeIn: 'ops', 'x-my-app': 'ABC' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'appOption')
+
+  res = await app.inject({ url: '/', headers: { foo: 'bar', mustBeIn: '123', 'x-my-app': 'ABC' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'mustBeIn and appOption')
+
+  res = await app.inject({ url: '/', headers: { foo: 'bar', mustBeIn: 'ops', 'x-my-app': 'ABC' } })
+  t.equal(res.statusCode, 200)
+  t.equal(res.json().val, 'appOption')
 })
 
 function reply (val) {

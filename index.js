@@ -35,6 +35,10 @@ module.exports = function factoryHeaderConstraintStrategy (opts) {
     assert(false, 'You must provide a string or an object as argument')
   }
 
+  assert(name && header, 'You must provide a string or an object as argument')
+
+  header = header.toLowerCase()
+
   return {
     name,
     mustMatchWhenDerived,
