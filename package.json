@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/Eomm/header-constraint-strategy#readme",
   "devDependencies": {
-    "fastify": "^3.18.1",
-    "find-my-way": "^5.0.0",
+    "fastify": "^4.3.0",
+    "find-my-way": "^7.0.0",
     "standard": "^16.0.3",
     "tap": "^15.0.1"
   }

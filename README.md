@@ -88,9 +88,9 @@ The routes can be reached via an HTTP request with these headers.
 |5| - | `456` | - | 404
 |6| - | - | `ABC` | 200 - appOption
 |7| - | `123` | `ABC` | 200 - mustBeIn and appOption
-|8| - | `ops` | `ABC` | 200 - appOption
+|8| - | `ops` | `ABC` | 404
 |9| `bar` | `123` | `ABC` | 200 - mustBeIn and appOption
-|10| `bar` | `ops` | `ABC` | 200 - appOption
+|10| `bar` | `ops` | `ABC` | 404
 
 ### Cases explanation
 
@@ -101,9 +101,9 @@ The routes can be reached via an HTTP request with these headers.
 5) Like the 4), but this time the route without constraint is no used because of the flag `mustMatchWhenDerived: true`
 6) The `appOption` constraint is matched
 7) Multiple constraint matches
-8) Only the `appOption` constraint is matched
+8) Regardless the `appOption` constraint is matched, the `mustBeIn` constraint with `mustMatchWhenDerived=true` forces the handler to be used
 9) When there are multiple matches _(the route with `foo` and route with `mustBeIn` and `appOption`)_, the route with more fulfilled constraint wins!
-10) In case of draws _(the route with `foo` and the route with `appOption` are metching)_ wins the last route configured! So in this example, if you move the `foo` route ad the end of the file, the output will change!
+10) As the 8), the `mustBeIn` constraint is not fulfilled
 
 
 ## Options
@@ -114,7 +114,7 @@ You can pass the following options during the registration:
 |--------|---------|-------------|
 |`name`| as the header if not set | The name of the JSON property that you will set in the route's `constraints` option
 |`header`| as the name if not set | The HTTP header where read the input to match the constraint
-|`mustMatchWhenDerived`| `false` | Define if the same route without constraint must be evaluated for the routing
+|`mustMatchWhenDerived`| `false` | Define if the same route without constraint must be evaluated for the routing. You can translate it as: is this constraint mandatory?
 
 
 ## License

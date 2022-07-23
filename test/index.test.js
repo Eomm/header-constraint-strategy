@@ -16,7 +16,7 @@ test('Bad interface', t => {
 })
 
 test('FindMyWay integration', t => {
-  t.plan(5)
+  t.plan(7)
 
   const router = FindMyWay({
     defaultRoute: (req, res) => {
@@ -26,6 +26,10 @@ test('FindMyWay integration', t => {
       world: headerConstraintStrategy({
         name: 'world', // the name must be equal to the json property
         header: 'hello',
+        mustMatchWhenDerived: true
+      }),
+      name: headerConstraintStrategy({
+        header: 'name',
         mustMatchWhenDerived: true
       })
     }
@@ -43,10 +47,16 @@ test('FindMyWay integration', t => {
     t.pass('route B')
   })
 
+  router.on('GET', '/', { constraints: { world: 'C', name: 'foo' } }, (req, res) => {
+    t.pass('route C')
+  })
+
   router.lookup({ method: 'GET', url: '/', headers: { } }, {})
   router.lookup({ method: 'GET', url: '/', headers: { hello: 'A' } }, {})
   router.lookup({ method: 'GET', url: '/', headers: { hello: 'B' } }, {})
   router.lookup({ method: 'GET', url: '/', headers: { hello: 'C' } }, {})
+  router.lookup({ method: 'GET', url: '/', headers: { hello: 'C', name: 'foo' } }, {})
+  router.lookup({ method: 'GET', url: '/', headers: { name: 'bar' } }, {})
 
   router.off('GET', '/')
   router.reset()
@@ -96,11 +106,11 @@ test('Fastify integration', async t => {
 
   res = await app.inject({ url: '/', headers: { foo: 'zxc', bar: 'QWE' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response 3')
+  t.equal(res.json().val, 'response 2', 'order priority')
 
   res = await app.inject({ url: '/', headers: { bar: 'QWE', foo: 'zxc' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response 3')
+  t.equal(res.json().val, 'response 2')
 
   res = await app.inject({ url: '/', headers: { foo: 'zxc' } })
   t.equal(res.statusCode, 200)
@@ -157,42 +167,40 @@ test('README example', async t => {
   let res
   res = await app.inject({ url: '/' })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'no constraint')
+  t.equal(res.json().val, 'no constraint', 'case 1')
 
   res = await app.inject({ url: '/', headers: { foo: 'bar' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'foo')
+  t.equal(res.json().val, 'foo', 'case 2')
 
   res = await app.inject({ url: '/', headers: { foo: 'hello' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'no constraint')
+  t.equal(res.json().val, 'no constraint', 'case 3')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: '123' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'mustBeIn')
+  t.equal(res.json().val, 'mustBeIn', 'case 4')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: '456' } })
-  t.equal(res.statusCode, 404)
+  t.equal(res.statusCode, 404, 'case 5')
 
   res = await app.inject({ url: '/', headers: { 'x-my-app': 'ABC' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'appOption')
+  t.equal(res.json().val, 'appOption', 'case 6')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: '123', 'x-my-app': 'ABC' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'mustBeIn and appOption')
+  t.equal(res.json().val, 'mustBeIn and appOption', 'case 7')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: 'ops', 'x-my-app': 'ABC' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'appOption')
+  t.equal(res.statusCode, 404, 'case 8')
 
   res = await app.inject({ url: '/', headers: { foo: 'bar', mustBeIn: '123', 'x-my-app': 'ABC' } })
   t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'mustBeIn and appOption')
+  t.equal(res.json().val, 'mustBeIn and appOption', 'case 9')
 
   res = await app.inject({ url: '/', headers: { foo: 'bar', mustBeIn: 'ops', 'x-my-app': 'ABC' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'appOption')
+  t.equal(res.statusCode, 404, 'case 10')
 })
 
 function reply (val) {
