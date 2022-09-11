@@ -19,6 +19,7 @@
     "plugin"
   ],
   "author": "Manuel Spigolon <behemoth89@gmail.com> (https://github.com/Eomm)",
+  "funding": "https://github.com/Eomm/header-constraint-strategy?sponsor=1",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Eomm/header-constraint-strategy/issues"
