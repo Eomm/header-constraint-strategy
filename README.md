@@ -1,7 +1,7 @@
 # header-constraint-strategy
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![Build Status](https://github.com/Eomm/header-constraint-strategy/workflows/ci/badge.svg)](https://github.com/Eomm/header-constraint-strategy/actions)
+[![ci](https://github.com/Eomm/header-constraint-strategy/actions/workflows/ci.yml/badge.svg)](https://github.com/Eomm/header-constraint-strategy/actions/workflows/ci.yml)
 
 A general purpose [`find-my-way`](https://github.com/delvedor/find-my-way) custom [constraint strategy](https://www.fastify.io/docs/latest/Routes/#constraints).
 
