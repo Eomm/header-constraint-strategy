@@ -1,6 +1,6 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
 const FindMyWay = require('find-my-way')
 const Fastify = require('fastify')
 
@@ -8,9 +8,9 @@ const headerConstraintStrategy = require('../index')
 
 test('Bad interface', t => {
   t.plan(2)
-  t.throws(headerConstraintStrategy)
+  t.assert.throws(headerConstraintStrategy)
 
-  t.throws(() => {
+  t.assert.throws(() => {
     headerConstraintStrategy({})
   })
 })
@@ -20,7 +20,7 @@ test('FindMyWay integration', t => {
 
   const router = FindMyWay({
     defaultRoute: (req, res) => {
-      t.pass('404')
+      t.assert.ok('404')
     },
     constraints: {
       world: headerConstraintStrategy({
@@ -36,19 +36,19 @@ test('FindMyWay integration', t => {
   })
 
   router.on('GET', '/', (req, res) => {
-    t.pass('root')
+    t.assert.ok('root')
   })
 
   router.on('GET', '/', { constraints: { world: 'A' } }, (req, res) => {
-    t.pass('route A')
+    t.assert.ok('route A')
   })
 
   router.on('GET', '/', { constraints: { world: 'B' } }, (req, res) => {
-    t.pass('route B')
+    t.assert.ok('route B')
   })
 
   router.on('GET', '/', { constraints: { world: 'C', name: 'foo' } }, (req, res) => {
-    t.pass('route C')
+    t.assert.ok('route C')
   })
 
   router.lookup({ method: 'GET', url: '/', headers: { } }, {})
@@ -60,7 +60,7 @@ test('FindMyWay integration', t => {
 
   router.off('GET', '/')
   router.reset()
-  t.pass('completed')
+  t.assert.ok('completed')
 })
 
 test('Fastify integration', async t => {
@@ -82,39 +82,39 @@ test('Fastify integration', async t => {
 
   let res
   res = await app.inject({ url: '/' })
-  t.equal(res.statusCode, 200, 'warm up')
-  t.equal(res.json().val, 'response root')
+  t.assert.strictEqual(res.statusCode, 200, 'warm up')
+  t.assert.strictEqual(res.json().val, 'response root')
 
   res = await app.inject({ url: '/', headers: { bar: 'abc' } })
-  t.equal(res.statusCode, 404, 'mustMatchWhenDerived in action')
+  t.assert.strictEqual(res.statusCode, 404, 'mustMatchWhenDerived in action')
 
   res = await app.inject({ url: '/', headers: { foo: 'abc' } })
-  t.equal(res.statusCode, 200, 'mustMatchWhenDerived in action')
-  t.equal(res.json().val, 'response root')
+  t.assert.strictEqual(res.statusCode, 200, 'mustMatchWhenDerived in action')
+  t.assert.strictEqual(res.json().val, 'response root')
 
   res = await app.inject({ url: '/', headers: { bar: 'QWE' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response 2')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'response 2')
 
   res = await app.inject({ url: '/', headers: { foo: 'zxc' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response 3')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'response 3')
 
   res = await app.inject({ url: '/', headers: { foo: 'asd', bar: 'ABC' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response mix')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'response mix')
 
   res = await app.inject({ url: '/', headers: { foo: 'zxc', bar: 'QWE' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response 2', 'order priority')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'response 2', 'order priority')
 
   res = await app.inject({ url: '/', headers: { bar: 'QWE', foo: 'zxc' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response 2')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'response 2')
 
   res = await app.inject({ url: '/', headers: { foo: 'zxc' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'response 3')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'response 3')
 })
 
 test('README example', async t => {
@@ -166,41 +166,63 @@ test('README example', async t => {
 
   let res
   res = await app.inject({ url: '/' })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'no constraint', 'case 1')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'no constraint', 'case 1')
 
   res = await app.inject({ url: '/', headers: { foo: 'bar' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'foo', 'case 2')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'foo', 'case 2')
 
   res = await app.inject({ url: '/', headers: { foo: 'hello' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'no constraint', 'case 3')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'no constraint', 'case 3')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: '123' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'mustBeIn', 'case 4')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'mustBeIn', 'case 4')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: '456' } })
-  t.equal(res.statusCode, 404, 'case 5')
+  t.assert.strictEqual(res.statusCode, 404, 'case 5')
 
   res = await app.inject({ url: '/', headers: { 'x-my-app': 'ABC' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'appOption', 'case 6')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'appOption', 'case 6')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: '123', 'x-my-app': 'ABC' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'mustBeIn and appOption', 'case 7')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'mustBeIn and appOption', 'case 7')
 
   res = await app.inject({ url: '/', headers: { mustBeIn: 'ops', 'x-my-app': 'ABC' } })
-  t.equal(res.statusCode, 404, 'case 8')
+  t.assert.strictEqual(res.statusCode, 404, 'case 8')
 
   res = await app.inject({ url: '/', headers: { foo: 'bar', mustBeIn: '123', 'x-my-app': 'ABC' } })
-  t.equal(res.statusCode, 200)
-  t.equal(res.json().val, 'mustBeIn and appOption', 'case 9')
+  t.assert.strictEqual(res.statusCode, 200)
+  t.assert.strictEqual(res.json().val, 'mustBeIn and appOption', 'case 9')
 
   res = await app.inject({ url: '/', headers: { foo: 'bar', mustBeIn: 'ops', 'x-my-app': 'ABC' } })
-  t.equal(res.statusCode, 404, 'case 10')
+  t.assert.strictEqual(res.statusCode, 404, 'case 10')
+})
+
+test('String storage', async (t) => {
+  const strategy = headerConstraintStrategy({
+    name: 'world', // the name must be equal to the json property
+    header: 'hello',
+    mustMatchWhenDerived: true
+  })
+
+  const storage = strategy.storage()
+
+  storage.set('A', 'store A')
+  t.assert.ok(storage.get('A'), 'store A')
+
+  storage.set('B', 'store B')
+  t.assert.ok(storage.get('B'), 'store B')
+
+  storage.del('A')
+  t.assert.ok(!storage.get('A'), 'store A deleted')
+
+  storage.empty()
+  t.assert.ok(!storage.get('B'), 'store B deleted')
 })
 
 function reply (val) {
