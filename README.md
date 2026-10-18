@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/Eomm/header-constraint-strategy/actions/workflows/ci.yml/badge.svg)](https://github.com/Eomm/header-constraint-strategy/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/header-constraint-strategy)](https://www.npmjs.com/package/header-constraint-strategy)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![neostandard javascript style](https://img.shields.io/badge/code_style-neostandard-brightgreen?style=flat)](https://github.com/neostandard/neostandard)
 
 A general purpose [`find-my-way`](https://github.com/delvedor/find-my-way) custom [constraint strategy](https://www.fastify.io/docs/latest/Routes/#constraints).
 
