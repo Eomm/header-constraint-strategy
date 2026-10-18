@@ -65,9 +65,11 @@ test('FindMyWay integration', t => {
 
 test('Fastify integration', async t => {
   const app = Fastify({
-    constraints: {
-      bar: headerConstraintStrategy({ header: 'bar', mustMatchWhenDerived: true }),
-      foo: headerConstraintStrategy('foo')
+    routerOptions: {
+      constraints: {
+        bar: headerConstraintStrategy({ header: 'bar', mustMatchWhenDerived: true }),
+        foo: headerConstraintStrategy('foo')
+      }
     }
   })
 
@@ -120,13 +122,15 @@ test('Fastify integration', async t => {
 test('README example', async t => {
   // STEP 1: setup the constraints into your fastify instance
   const app = Fastify({
-    constraints: {
-      // basic usage
-      foo: headerConstraintStrategy('foo'),
-      // strict usage
-      mustBeIn: headerConstraintStrategy({ header: 'mustBeIn', mustMatchWhenDerived: true }),
-      // custom header usage
-      appOption: headerConstraintStrategy({ name: 'appOption', header: 'x-my-app' })
+    routerOptions: {
+      constraints: {
+        // basic usage
+        foo: headerConstraintStrategy('foo'),
+        // strict usage
+        mustBeIn: headerConstraintStrategy({ header: 'mustBeIn', mustMatchWhenDerived: true }),
+        // custom header usage
+        appOption: headerConstraintStrategy({ name: 'appOption', header: 'x-my-app' })
+      }
     }
   })
 
