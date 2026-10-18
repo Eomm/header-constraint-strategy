@@ -31,13 +31,15 @@ const Fastify = require('fastify')
 
 // STEP 1: setup the constraints into your fastify instance
 const app = Fastify({
-  constraints: {
-    // basic usage
-    foo: headerConstraintStrategy('foo'),
-    // strict usage
-    mustBeIn: headerConstraintStrategy({ header: 'mustBeIn', mustMatchWhenDerived: true }),
-    // custom header usage
-    appOption: headerConstraintStrategy({ name: 'appOption', header: 'x-my-app' })
+  routerOptions: {
+    constraints: {
+      // basic usage
+      foo: headerConstraintStrategy('foo'),
+      // strict usage
+      mustBeIn: headerConstraintStrategy({ header: 'mustBeIn', mustMatchWhenDerived: true }),
+      // custom header usage
+      appOption: headerConstraintStrategy({ name: 'appOption', header: 'x-my-app' })
+    }
   }
 })
 
