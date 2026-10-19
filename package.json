@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/Eomm/header-constraint-strategy#readme",
   "devDependencies": {
-    "c8": "^10.1.3",
+    "c8": "^12.0.0",
     "fastify": "^5.0.0",
     "find-my-way": "^9.0.0",
     "neostandard": "^0.14.0",
